@@ -2,9 +2,8 @@ from pygame.sprite import Sprite
 from GameGroups import engine_objects
 
 class Attack(Sprite):
-    def __init__(self, damage = 5, delay = 50):
+    def __init__(self, delay = 50):
         Sprite.__init__(self, engine_objects)
-        self.damage = damage
         self.delay = delay
         self.counter = 0
         self.hitting = False
@@ -17,9 +16,9 @@ class Attack(Sprite):
                 self.counter = 0
                 self.hitting = False
 
-    def hit_enemy(self, enemy):
+    def hit_enemy(self, enemy, damage = 5):
         if self.counter == 0:
             self.hitting = True
-            enemy.get_hit(self.damage)
+            enemy.get_hit(damage)
             self.update()
 

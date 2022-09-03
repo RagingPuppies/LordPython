@@ -52,7 +52,7 @@ class GameEngine:
       object.update(self.controls)
 
     for object in dropped_items:
-      object.update(self.controls, self.player)
+      object.update(self.controls, self.player, self.camera)
 
     self.compute_player()
 

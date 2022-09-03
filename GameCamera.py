@@ -18,10 +18,12 @@ class PlayerCamera(object):
         self.screen_height = screen_height
 
     def apply(self, target):
+        #print(self.state.topleft)
         return target.rect.move(self.state.topleft)
 
     def update(self, target):
         self.state = self.camera_func(self.state, target.rect, self.sceen_width, self.screen_height)
+
 
 
 

@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Leather Boots",
+    "type": "BOOTS",
+    "defense": 1,
+    "level": 1
+  },
+  {
+    "name": "Cape of Darkness",
+    "type": "ARMOR",
+    "defense": 5,
+    "level": 1
+  },
+  {
+    "name": "Neckless of wisdom",
+    "type": "JEWEL",
+    "defense": 3,
+    "level": 1
+  },
+  {
+    "name": "Small Axe",
+    "type": "WEAPON",
+    "attack": 3,
+    "level": 1
+  },
+  {
+    "name": "Boots of Darkness",
+    "type": "BOOTS",
+    "defense": 5,
+    "level": 1
+  },
+  {
+    "name": "Staff of Wonder",
+    "type": "WEAPON",
+    "attack": 5,
+    "level": 1
+  },
+  {
+    "name": "Golden Shield",
+    "type": "SHIELD",
+    "defense": 3,
+    "level": 1
+  }
+]
+

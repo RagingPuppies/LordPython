@@ -21,6 +21,7 @@ class Bag(Sprite):
       self.current_capacity = 0
       self.slots = []
       self.moving_item = None
+      self.changed = False
       self.init_slots()
 
     def init_slots(self):
@@ -65,6 +66,7 @@ class Bag(Sprite):
       slot = self.find_empty_slot()
       if slot:
         slot.assert_item(item)
+        self.changed = True
         return True
       print("Bag is full.")
       return False

@@ -41,6 +41,7 @@ class AbstractSlot(Sprite, ABC):
         print(f"Got new item {item}")
         self.item = item
         self.item.in_slot = True
+        self.bag.changed = True
         return True
       print(f"Already Got item in this Slot.")
       return False

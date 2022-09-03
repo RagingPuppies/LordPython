@@ -1,15 +1,15 @@
 from ast import Dict
 from unittest.mock import patch
-from GameItem import Wearable 
+from GameItem import WearableItem 
 import pygame
 import random
-import csv
+import json
 
 
 def random_item(level, loc_x, loc_y):
-  with open('Resources/Datasets/items.csv', newline='') as csvfile:
-       reader = csv.DictReader(csvfile)
-       items = list(reader)
+  with open('Resources/Datasets/items.json') as jsonfile:
+       items = json.load(jsonfile)
+
 
   filtered_items = list(filter(lambda i: int(i['level']) == level, items))
   factory = ItemFactory(random.choice(filtered_items))
@@ -36,9 +36,9 @@ class ItemFactory:
     return [scaled]
 
   def create_item(self, loc_x, loc_y):
-    wearables = ['BOOTS', 'PANTS', 'ARMOR', 'HELMET', 'GLOVES', 'WEAPON', 'SHIELD', 'JEWEL']
-    if self.type in wearables:
-      return Wearable(self.load_image(), loc_x, loc_y, self.item)
+    WearableItems = ['BOOTS', 'PANTS', 'ARMOR', 'HELMET', 'GLOVES', 'WEAPON', 'SHIELD', 'JEWEL']
+    if self.type in WearableItems:
+      return WearableItem(self.load_image(), loc_x, loc_y, self.item)
 
 
   

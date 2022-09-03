@@ -29,9 +29,12 @@ class LivingObject(DirtySprite):
     self.accelerating = False
     self._running_step = 6
     self.running_force = 0
+
     # Gameplay
-    self.maxhp = 20
+    self.maxhp = 5
     self.hp = self.maxhp
+    self.active_defense = 0
+    self.active_damage = 0
 
   def update(self):
     ...
@@ -45,8 +48,9 @@ class LivingObject(DirtySprite):
             if yvel < 0 : self.rect.top = object.rect.bottom
 
   def get_hit(self, damage):
-    self.hp -= damage
-    Damage(self.rect.x + 20, self.rect.y - 50, damage, 18)
+    actual_dmg = (damage - self.active_defense)
+    self.hp -= actual_dmg
+    Damage(self.rect.x + 20, self.rect.y - 50, actual_dmg, 18)
     Slash(self)
     if self.hp < 0:
       self.hp = 0

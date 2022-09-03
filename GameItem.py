@@ -29,9 +29,14 @@ class AbstractItem(Sprite):
       self.properties = {'Name': 'Abstract Item'}
 
 
-    def is_mouse_over(self, mouse_x, mouse_y):
+    def is_mouse_over(self, mouse_x, mouse_y, camera):
 
       location_x, location_y, size_x, size_y = self.rect
+
+      # Take the screen offset and apply it on item x, y (to collide with mouse screen cords)
+      if camera: 
+        location_x = location_x + camera.state.topleft[0]
+        location_y = location_y + camera.state.topleft[1]
 
       if location_x + size_x > mouse_x > location_x and location_y + size_y > mouse_y > location_y:
         self.mouse_over = True
@@ -53,13 +58,14 @@ class AbstractItem(Sprite):
       if self.droped and self.player_in_range(player):
         if player.pickup(self):
           self.droped = False
+          dropped_items.remove(self)
           location_based.remove(self)
           overlay_objects.add(self)
 
       if self.in_slot:
         self.in_bag = True
 
-    def update(self, controls, player = None):
+    def update(self, controls, player = None, camera = None):
 
       mouse_x, mouse_y = mouse.get_pos()
       
@@ -67,7 +73,7 @@ class AbstractItem(Sprite):
         self.rect.x = mouse_x
         self.rect.y = mouse_y
 
-      if self.is_mouse_over(mouse_x, mouse_y):
+      if self.is_mouse_over(mouse_x, mouse_y, camera):
 
         if self.in_bag and not self.drag:
           self.create_description()
@@ -94,10 +100,10 @@ class AbstractItem(Sprite):
           self.description.clean()
           self.description = None
 
-class Wearable(AbstractItem):
+class WearableItem(AbstractItem):
     def __init__(self, sprite, x, y, item):
       AbstractItem.__init__(self, sprite, x, y)
-      self.defense = item['defense']
+      self.defense = int(item['defense'])
       self.type = item['type']
       self.price = 0
       self.properties = {'Name': item['name'], 'Defense': item['defense'], 'Price': self.price}

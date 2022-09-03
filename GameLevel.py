@@ -53,3 +53,7 @@ class Level(Sprite):
     Enemy(800, 500, 1, spider,[enemies, location_based], 2)
     Enemy(1100, 500, 1, spider,[enemies, location_based], 2)
     Enemy(1100, 800, 1, spider,[enemies, location_based], 2)
+    Enemy(1100, 1000, 1, spider,[enemies, location_based], 2)
+    Enemy(1100, 1200, 1, spider,[enemies, location_based], 2)
+    Enemy(1100, 1300, 1, spider,[enemies, location_based], 2)
+    Enemy(1100, 1500, 1, spider,[enemies, location_based], 2)

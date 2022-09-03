@@ -17,6 +17,11 @@ class Player(LivingObject):
     self.mana = self.maxmana
     self.bag = bag
 
+    # Player States
+    self.defense = 0
+    self.strength = 5
+
+
   def update(self , controls, objects):   
     if self.hp < 1:
       self.pannel.remove_childs()
@@ -37,9 +42,28 @@ class Player(LivingObject):
 
     if self.attacking:
       self.attack_loop()
-      
+    
+    if self.bag.changed:
+      self.active_defense = self.defense + self.wearable_defense_additions()
+      self.active_damage = self.wearable_attack_additions()
+      self.bag.changed = False
     self.animate()
 
+  def wearable_defense_additions(self):
+    total_defense = 0
+    for slot in filter(lambda slot: slot.type != 'BAG', self.bag.slots):
+      if slot.item:
+        if getattr(slot.item, 'defense', None):
+          total_defense += slot.item.defense
+    return total_defense
+
+  def wearable_attack_additions(self):
+    total_attack = 0
+    for slot in filter(lambda slot: slot.type != 'BAG', self.bag.slots):
+      if slot.item:
+        if getattr(slot.item, 'attack', None):
+          total_attack += slot.item.attack
+    return total_attack
 
   def movement(self, controls):
     if self.running_force > 0 and controls.ACCELERATE:
@@ -54,12 +78,15 @@ class Player(LivingObject):
         if collide_rect(self, enemy):
             return enemy
 
+  def calc_damage(self):
+    return self.active_damage + self.strength
+
   def attack(self, controls):
     if controls.MOUSE_LEFT and not any(o.mouse_over for o in player_stopper):  
       self.attacking = True
       enemy = self.collide_with_enemy()
       if enemy:
-        self.normal_attack.hit_enemy(enemy)
+        self.normal_attack.hit_enemy(enemy, self.calc_damage())
 
   def idle(self, controls):
     if not (controls.LEFT or controls.RIGHT or controls.UP or controls.DOWN or controls.ACCELERATE):
