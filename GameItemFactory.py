@@ -1,6 +1,6 @@
 from ast import Dict
 from unittest.mock import patch
-from GameItem import WearableItem 
+from GameItem import PotionItem, WearableItem 
 import pygame
 import random
 import json
@@ -39,6 +39,10 @@ class ItemFactory:
     WearableItems = ['BOOTS', 'PANTS', 'ARMOR', 'HELMET', 'GLOVES', 'WEAPON', 'SHIELD', 'JEWEL']
     if self.type in WearableItems:
       return WearableItem(self.load_image(), loc_x, loc_y, self.item)
+    else:
+      return PotionItem(self.load_image(), loc_x, loc_y, self.item)
+
+
 
 
   

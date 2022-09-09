@@ -19,19 +19,38 @@ class AbstractSlot(Sprite, ABC):
       self.mouse_over = False
       self.item = None
 
-    def clicked(self, controls):
+    def is_mouseover(self):
+
       mouse_x, mouse_y = mouse.get_pos()
       location_x, location_y, size_x, size_y = self.rect
 
-      if location_x + size_x > mouse_x > location_x and location_y + size_y > mouse_y > location_y and controls.MOUSE_LEFT and self.is_clickable:
+      if location_x + size_x > mouse_x > location_x and location_y + size_y > mouse_y > location_y:
         self.mouse_over = True
+        return True
+
+      self.mouse_over = False
+      return False
+
+    def clicked(self, controls):
+
+      if self.is_mouseover() and controls.MOUSE_LEFT and self.is_clickable:
         self.is_clickable = False
         return True
 
       if not controls.MOUSE_LEFT:
           self.is_clickable = True
       # Reset mouseover switches
-      self.mouse_over = False
+
+
+    def right_clicked(self, controls):
+      
+      if self.is_mouseover() and controls.MOUSE_RIGHT and self.is_clickable:
+        self.is_clickable = False
+        return True
+
+      if not controls.MOUSE_LEFT:
+          self.is_clickable = True
+
 
     def printx(Self):
       ...
@@ -74,6 +93,11 @@ class AbstractSlot(Sprite, ABC):
               self.bag.moving_item = False
           else:
             print('Theres an item moving or item type desont match')
+
+      if self.right_clicked(controls):
+        if self.item:
+          if self.bag.apply_item_on_player(self.item):
+            self.item = None
 
       self.toggle_visibiliy()
 

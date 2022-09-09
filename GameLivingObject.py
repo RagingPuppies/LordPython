@@ -6,7 +6,7 @@ from GameObject import Damage, Slash
 
 
 class LivingObject(DirtySprite):
-  def __init__(self, location_x, location_y, animation, group, walk_speed = 3):
+  def __init__(self, location_x, location_y, animation, group, walk_speed = 3, level = 1):
     DirtySprite.__init__(self, group)
     # Visibility
     self.animation = animation
@@ -35,6 +35,7 @@ class LivingObject(DirtySprite):
     self.hp = self.maxhp
     self.active_defense = 0
     self.active_damage = 0
+    self.level = level
 
   def update(self):
     ...
@@ -49,6 +50,9 @@ class LivingObject(DirtySprite):
 
   def get_hit(self, damage):
     actual_dmg = (damage - self.active_defense)
+    if actual_dmg < self.level:
+      actual_dmg = self.level
+      
     self.hp -= actual_dmg
     Damage(self.rect.x + 20, self.rect.y - 50, actual_dmg, 18)
     Slash(self)

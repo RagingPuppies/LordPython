@@ -40,6 +40,31 @@
     "type": "SHIELD",
     "defense": 3,
     "level": 1
+  },
+  {
+    "name": "Potion",
+    "type": "POTION",
+    "level": 1
+  },
+  {
+    "name": "Potion",
+    "type": "POTION",
+    "level": 1
+  },
+  {
+    "name": "Potion",
+    "type": "POTION",
+    "level": 1
+  },
+  {
+    "name": "Potion",
+    "type": "POTION",
+    "level": 1
+  },
+  {
+    "name": "Potion",
+    "type": "POTION",
+    "level": 1
   }
 ]
 

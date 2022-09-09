@@ -6,7 +6,7 @@ from pygame import Surface
 from GameSprites import bag
 from pygame import mouse
 import GameColors
-
+from GameObject import Text
 
 class Bag(Sprite):
     def __init__(self):
@@ -22,7 +22,10 @@ class Bag(Sprite):
       self.slots = []
       self.moving_item = None
       self.changed = False
+      self.text = []
+      self.player = None
       self.init_slots()
+      
 
     def init_slots(self):
       self.slots.append(BootsSlot(300, 325, self.slots_size, self))
@@ -71,6 +74,10 @@ class Bag(Sprite):
       print("Bag is full.")
       return False
 
+    def apply_item_on_player(self, item):
+      if item.use_item(self.player):
+        return True
+
     def update(self, _):
       if self.moving_item:
           mouse_x, mouse_y = mouse.get_pos()
@@ -78,5 +85,11 @@ class Bag(Sprite):
           self.moving_item.rect.y = mouse_y
       if self.visible:
         self.rect.x = 15
+        if self.player and len(self.text) == 0:
+          self.text.append(Text(self.rect.x + 235 , self.rect.y + 350  , f"Strength: {self.player.strength}({self.player.active_damage})", color = GameColors.WHITE, group = overlay_objects ))
+          self.text.append(Text(self.rect.x + 235 , self.rect.y + 370  , f"Defense: {self.player.defense}({self.player.active_defense})", color = GameColors.WHITE, group = overlay_objects ))
       else:
         self.rect.x = -1000
+        for t in self.text:
+          self.text.remove(t)
+          t.kill()

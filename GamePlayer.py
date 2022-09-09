@@ -3,6 +3,7 @@ from pygame.sprite import  collide_rect
 from GameObject import PlayerPanel, Glow
 from FightEngine import Attack
 from GameGroups import enemies, player_stopper
+from random import randint
 
 class Player(LivingObject):
   def __init__(self, loc_x, loc_y, animation, bag, group):
@@ -16,6 +17,7 @@ class Player(LivingObject):
     self.maxmana = 100
     self.mana = self.maxmana
     self.bag = bag
+    self.bag.player = self
 
     # Player States
     self.defense = 0
@@ -46,6 +48,10 @@ class Player(LivingObject):
     if self.bag.changed:
       self.active_defense = self.defense + self.wearable_defense_additions()
       self.active_damage = self.wearable_attack_additions()
+      #TODO: fix removal of text
+      for t in self.bag.text:
+        self.bag.text.remove(t)
+        t.kill()
       self.bag.changed = False
     self.animate()
 
@@ -57,6 +63,12 @@ class Player(LivingObject):
           total_defense += slot.item.defense
     return total_defense
 
+  def add_health_points(self, points):
+    if self.hp + points > self.maxhp:
+      self.hp = self.maxhp
+    else:
+      self.hp += points
+      
   def wearable_attack_additions(self):
     total_attack = 0
     for slot in filter(lambda slot: slot.type != 'BAG', self.bag.slots):
@@ -79,7 +91,8 @@ class Player(LivingObject):
             return enemy
 
   def calc_damage(self):
-    return self.active_damage + self.strength
+    max_rand = randint(0, self.level)
+    return self.active_damage + self.strength + max_rand
 
   def attack(self, controls):
     if controls.MOUSE_LEFT and not any(o.mouse_over for o in player_stopper):  

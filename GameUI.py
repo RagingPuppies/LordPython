@@ -30,6 +30,7 @@ class ItemDescriptionPanel(Sprite):
     self.rect.y = self.objective.rect.y + self.x_offset
 
 
+
   def clean(self):
     for t in self.text:
       t.kill()

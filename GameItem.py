@@ -51,7 +51,7 @@ class AbstractItem(Sprite):
 
     def create_description(self):
       if not self.description:
-        self.description = ItemDescriptionPanel(250, 200, self)
+        self.description = ItemDescriptionPanel(250, 100, self)
 
     def action(self, player):
 
@@ -65,10 +65,15 @@ class AbstractItem(Sprite):
       if self.in_slot:
         self.in_bag = True
 
+    def destroy(self):
+      self.description.clean()
+      overlay_objects.remove(self)
+      self.kill()
+
+
     def update(self, controls, player = None, camera = None):
 
       mouse_x, mouse_y = mouse.get_pos()
-      
       if self.drag:
         self.rect.x = mouse_x
         self.rect.y = mouse_y
@@ -103,7 +108,37 @@ class AbstractItem(Sprite):
 class WearableItem(AbstractItem):
     def __init__(self, sprite, x, y, item):
       AbstractItem.__init__(self, sprite, x, y)
-      self.defense = int(item['defense'])
       self.type = item['type']
       self.price = 0
-      self.properties = {'Name': item['name'], 'Defense': item['defense'], 'Price': self.price}
+
+      if 'defense' in item:
+        self.defense = int(item['defense'])
+        self.properties = {'Name': item['name'], 'Defense': item['defense'], 'Price': self.price}
+      if 'attack' in item:
+        self.attack = int(item['attack'])
+        self.properties = {'Name': item['name'], 'Attack': item['attack'], 'Price': self.price}
+
+
+class PotionItem(AbstractItem):
+    def __init__(self, sprite, x, y, item, size = 'small'):
+      AbstractItem.__init__(self, sprite, x, y)
+      self.type = item['type']
+      self.price = 0
+      self.restore_points = 0
+
+      if size == 'small':
+        self.restore_points = 25
+
+      if size == 'madium':
+        self.restore_points = 50
+
+      if size == 'large':
+        self.restore_points = 100
+
+      self.properties = {'Name': f"{size} Potion"}
+
+    def use_item(self, player):
+      if self.in_slot and self.in_bag:
+        player.add_health_points(self.restore_points)
+        self.destroy()
+        return True
