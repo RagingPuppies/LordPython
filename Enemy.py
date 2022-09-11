@@ -4,6 +4,7 @@ from pygame.sprite import  collide_rect
 from FightEngine import Attack
 import math, random
 from GameItemFactory import random_item
+from random import randint
 
 class Enemy(LivingObject):
     def __init__(self, loc_x, loc_y, level, animation , group, speed, sight = 200):
@@ -12,9 +13,10 @@ class Enemy(LivingObject):
         self.sight = sight
         self._step = speed
         self.level = level
-        self.animation_multiplier = 10
+        self.animation_multiplier = 4
         self.normal_attack = Attack(delay = 100)
         self.health_bar = HealthBar(self)
+        self.delay_attack = 40
         
     def update(self, player, objects):
         if self.hp < 1:
@@ -22,12 +24,17 @@ class Enemy(LivingObject):
             random_item(self.level, self.rect.x, self.rect.y)
             self.kill()
 
-        if self.player_in_range(player) and not self.attacking:   
-            self.move_towards_player(player)
+        if self.player_in_range(player) and not self.attacking:
+            if not collide_rect(self, player):   
+                self.move_towards_player(player)
+
         else:
             self.moving = False
             self.yvel = 0
             self.xvel = 0
+
+        if self.attacking:
+            self.attack(player)
 
         self.rect.left += self.xvel
         self.collide(self.xvel, 0, objects, player)
@@ -36,11 +43,15 @@ class Enemy(LivingObject):
 
         self.animate()
 
+    def hit(self, target):
+        self.normal_attack.hit_enemy(target)
+
     def collide(self, xvel, yvel, objects, player):
         LivingObject.collide(self, xvel, yvel, objects)
         if collide_rect(self, player):
-            self.attacking = True
-            self.normal_attack.hit_enemy(player)
+            rand = randint(0, 100)
+            if rand == 3:
+                self.attacking = True
         else:
             self.attacking = False
 

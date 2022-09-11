@@ -24,14 +24,12 @@ class Player(LivingObject):
     self.strength = 5
 
 
-  def update(self , controls, objects):   
+  def update(self , controls, objects):
     if self.hp < 1:
       self.pannel.remove_childs()
       self.pannel.kill()
       self.glow.kill()
       self.kill()
-
-    self.attack(controls)
   
     if not self.attacking:
       self.movement(controls)
@@ -43,7 +41,11 @@ class Player(LivingObject):
       self.collide(0, self.yvel, objects)
 
     if self.attacking:
-      self.attack_loop()
+      enemy = self.collide_with_enemy()
+      self.attack(enemy)
+
+    if self.is_attacking(controls) and not self.attacking:
+      self.attacking = True
     
     if self.bag.changed:
       self.active_defense = self.defense + self.wearable_defense_additions()
@@ -94,12 +96,13 @@ class Player(LivingObject):
     max_rand = randint(0, self.level)
     return self.active_damage + self.strength + max_rand
 
-  def attack(self, controls):
-    if controls.MOUSE_LEFT and not any(o.mouse_over for o in player_stopper):  
-      self.attacking = True
-      enemy = self.collide_with_enemy()
-      if enemy:
-        self.normal_attack.hit_enemy(enemy, self.calc_damage())
+  def is_attacking(self, controls):
+    if controls.MOUSE_LEFT and not any(o.mouse_over for o in player_stopper):
+      return True
+
+  def hit(self, enemy):
+    if enemy:
+      self.normal_attack.hit_enemy(enemy, self.calc_damage())
 
   def idle(self, controls):
     if not (controls.LEFT or controls.RIGHT or controls.UP or controls.DOWN or controls.ACCELERATE):

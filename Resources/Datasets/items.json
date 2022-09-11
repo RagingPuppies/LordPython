@@ -12,9 +12,21 @@
     "level": 1
   },
   {
+    "name": "Metal Gloves",
+    "type": "GLOVES",
+    "defense": 5,
+    "level": 1
+  },
+  {
     "name": "Neckless of wisdom",
     "type": "JEWEL",
     "defense": 3,
+    "level": 1
+  },
+  {
+    "name": "Pendant of Destruction",
+    "type": "JEWEL",
+    "attack": 2,
     "level": 1
   },
   {

@@ -4,7 +4,6 @@ from pygame import Rect
 from GameObject import Damage, Slash
 
 
-
 class LivingObject(DirtySprite):
   def __init__(self, location_x, location_y, animation, group, walk_speed = 3, level = 1):
     DirtySprite.__init__(self, group)
@@ -12,12 +11,13 @@ class LivingObject(DirtySprite):
     self.animation = animation
     self.direction = "down"
     self.image = self.animation.stand_down[0]
-    self.rect = Rect(location_x, location_y, 50, 50)
+    self.rect = Rect(location_x, location_y, 50, 60)
     self.animation_speed_counter = 0
     self.animation_speed = 40
     self.animation_multiplier = 1
     self.animframe = 3
-    self.attack_time = 30
+    # Attack 
+    self.delay_attack = 22
     self.attack_counter = 0
     # Movement
     self.yvel = 0
@@ -25,13 +25,14 @@ class LivingObject(DirtySprite):
     self._step = walk_speed
     self.moving = False
     self.attacking = False
+    self.can_attack = True
     self.colliding = False
     self.accelerating = False
-    self._running_step = 6
+    self._running_step = 4
     self.running_force = 0
 
     # Gameplay
-    self.maxhp = 5
+    self.maxhp = 20
     self.hp = self.maxhp
     self.active_defense = 0
     self.active_damage = 0
@@ -52,7 +53,7 @@ class LivingObject(DirtySprite):
     actual_dmg = (damage - self.active_defense)
     if actual_dmg < self.level:
       actual_dmg = self.level
-      
+
     self.hp -= actual_dmg
     Damage(self.rect.x + 20, self.rect.y - 50, actual_dmg, 18)
     Slash(self)
@@ -75,12 +76,13 @@ class LivingObject(DirtySprite):
     if direction == "right":
       self.xvel = speed
 
-  def attack_loop(self):
-    if self.attack_time >= self.attack_counter:
-      self.attack_counter +=1
-    else:
-      self.attacking = False
+
+  def attack(self, target):
+    self.attack_counter +=1
+    if self.attack_counter >= self.delay_attack:
       self.attack_counter = 0
+      self.attacking = False
+      self.hit(target)
 
   def animate(self):
     """
@@ -108,6 +110,8 @@ class LivingObject(DirtySprite):
             self.animation_speed_counter = 0
           else:
             self.animation_speed_counter += 1
+
+
 
   def update_image(self, image):
       if self.direction == "left":
