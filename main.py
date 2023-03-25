@@ -4,8 +4,8 @@ from GameLevel import Level
 from GameCamera import PlayerCamera
 
 
-WIN_WIDTH = 800
-WIN_HEIGHT = 600
+WIN_WIDTH = 1600
+WIN_HEIGHT = 1200
 
 def main():
   controls = Controls()

@@ -1,19 +1,23 @@
 from ast import Dict
-from unittest.mock import patch
-from GameItem import PotionItem, WearableItem 
+from GameItem import PotionItem, WearableItem, CoinsItem
 import pygame
 import random
 import json
+from GameConfigurations import ITEM_DROP_RATE
 
 
 def random_item(level, loc_x, loc_y):
-  with open('Resources/Datasets/items.json') as jsonfile:
-       items = json.load(jsonfile)
+  if random.randrange(1,100) < ITEM_DROP_RATE:
+    with open('Resources/Datasets/items.json') as jsonfile:
+        items = json.load(jsonfile)
 
-
-  filtered_items = list(filter(lambda i: int(i['level']) == level, items))
-  factory = ItemFactory(random.choice(filtered_items))
-  return factory.create_item(loc_x, loc_y)
+    filtered_items = list(filter(lambda i: int(i['level']) == level, items))
+    factory = ItemFactory(random.choice(filtered_items))
+    return factory.create_item(loc_x, loc_y)
+  else:
+    coins = {'name': 'coins', 'type': 'COINS', 'value': 10}
+    factory = ItemFactory(coins)
+    return factory.create_item(loc_x, loc_y)
 
 
 class ItemFactory:
@@ -29,7 +33,6 @@ class ItemFactory:
 
   def load_image(self, scale = 0.5):
     path = self.construct_img_path()
-    print(path)
     img = pygame.image.load(path)
     x, y, x_s, y_s = img.get_rect()
     scaled = pygame.transform.scale(img, ( int(x_s*scale), int(y_s*scale) ))
@@ -39,8 +42,10 @@ class ItemFactory:
     WearableItems = ['BOOTS', 'PANTS', 'ARMOR', 'HELMET', 'GLOVES', 'WEAPON', 'SHIELD', 'JEWEL']
     if self.type in WearableItems:
       return WearableItem(self.load_image(), loc_x, loc_y, self.item)
-    else:
+    elif self.type == 'POTION':
       return PotionItem(self.load_image(), loc_x, loc_y, self.item)
+    elif self.type == 'COINS':
+      return CoinsItem(self.load_image(), loc_x, loc_y, self.item)
 
 
 

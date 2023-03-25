@@ -1,0 +1,1 @@
+ITEM_DROP_RATE = 20

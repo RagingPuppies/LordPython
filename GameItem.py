@@ -142,3 +142,22 @@ class PotionItem(AbstractItem):
         player.add_health_points(self.restore_points)
         self.destroy()
         return True
+
+class CoinsItem(AbstractItem):
+    def __init__(self, sprite, x, y, item):
+      AbstractItem.__init__(self, sprite, x, y)
+      self.type = item['type']
+      self.value = item['value']
+
+      self.properties = {'Name': f"{self.value} coins of gold"}
+
+    def action(self, player):
+
+      if self.droped and self.player_in_range(player):
+        if player.pickup(self):
+          self.droped = False
+          dropped_items.remove(self)
+          location_based.remove(self)
+          player.bag.add_coins(self.value)
+          self.kill()
+

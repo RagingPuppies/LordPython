@@ -24,6 +24,7 @@ class Bag(Sprite):
       self.changed = False
       self.text = []
       self.player = None
+      self.gold = 0
       self.init_slots()
       
 
@@ -64,6 +65,10 @@ class Bag(Sprite):
       if self.moving_item:
         return True
       return False
+
+    def add_coins(self, amount):
+      self.gold += amount
+      print(f"got {amount} coins, now total is {self.gold}")
 
     def assert_bag(self, item):
       slot = self.find_empty_slot()

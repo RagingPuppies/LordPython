@@ -44,7 +44,8 @@ class Enemy(LivingObject):
         self.animate()
 
     def hit(self, target):
-        self.normal_attack.hit_enemy(target)
+        attack_dmg = self.level * 5
+        self.normal_attack.hit_enemy(target, attack_dmg)
 
     def collide(self, xvel, yvel, objects, player):
         LivingObject.collide(self, xvel, yvel, objects)
