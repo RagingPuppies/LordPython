@@ -1,13 +1,13 @@
 from pygame.sprite import DirtySprite, collide_rect
-from pygame.transform import flip
 from pygame import Rect
 from GameObject import Damage, Slash
-
+from Animation import Animator
 
 class LivingObject(DirtySprite):
   def __init__(self, location_x, location_y, animation, group, walk_speed = 3, level = 1):
     DirtySprite.__init__(self, group)
     # Visibility
+    self.animator = Animator(self)
     self.animation = animation
     self.direction = "down"
     self.image = self.animation.stand_down[0]
@@ -83,39 +83,3 @@ class LivingObject(DirtySprite):
       self.attack_counter = 0
       self.attacking = False
       self.hit(target)
-
-  def animate(self):
-    """
-    #TODO: Make Generic to all objects
-    """
-    if self.attacking:
-      self.animation_speed = int(20 * self.animation_multiplier)
-      self.loop_animation(getattr(self.animation, f"attack_{self.direction}"))
-    elif self.moving:
-      if self.accelerating:
-        self.animation_speed = int(20 * self.animation_multiplier)
-      else:
-        self.animation_speed = int(25 * self.animation_multiplier)
-      self.loop_animation(getattr(self.animation, f"walk_{self.direction}"))
-
-    else:
-      self.animation_speed = int(40 * self.animation_multiplier)
-      self.loop_animation(getattr(self.animation, f"stand_{self.direction}"))
-
-
-  def loop_animation(self, animtype):
-      for anim in animtype:
-          if self.animation_speed_counter >= self.animation_speed:
-            self.update_image(anim)
-            self.animation_speed_counter = 0
-          else:
-            self.animation_speed_counter += 1
-
-
-
-  def update_image(self, image):
-      if self.direction == "left":
-          image = flip(image, True, False)
-      self.image = image
-
-      

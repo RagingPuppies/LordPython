@@ -4,6 +4,7 @@ from GameObject import PlayerPanel, Glow
 from FightEngine import Attack
 from GameGroups import enemies, player_stopper
 from random import randint
+from Animation import Animator
 
 class Player(LivingObject):
   def __init__(self, loc_x, loc_y, animation, bag, group):
@@ -18,6 +19,7 @@ class Player(LivingObject):
     self.mana = self.maxmana
     self.bag = bag
     self.bag.player = self
+    
 
     # Player States
     self.defense = 0
@@ -55,7 +57,7 @@ class Player(LivingObject):
         self.bag.text.remove(t)
         t.kill()
       self.bag.changed = False
-    self.animate()
+    self.animator.animate()
 
   def wearable_defense_additions(self):
     total_defense = 0
