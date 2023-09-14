@@ -1,17 +1,18 @@
-from GameLivingObject import LivingObject
+from GameMovingObject import MovingObject
 from pygame.sprite import  collide_rect
-from GameObject import PlayerPanel, Glow
+from GameObject import PlayerPanel, Glow, GlowFade
 from FightEngine import Attack
 from GameGroups import enemies, player_stopper
 from random import randint
 from Animation import Animator
 
-class Player(LivingObject):
+class Player(MovingObject):
   def __init__(self, loc_x, loc_y, animation, bag, group):
-    LivingObject.__init__(self, loc_x, loc_y, animation, group)
+    MovingObject.__init__(self, loc_x, loc_y, animation, group)
     self.running_force = 50
     self.pannel = PlayerPanel(self)
     self.glow = Glow(self)
+    self.glow2 = GlowFade(self)
     self.normal_attack = Attack()
     self.maxhp = 50
     self.hp = self.maxhp
@@ -19,7 +20,6 @@ class Player(LivingObject):
     self.mana = self.maxmana
     self.bag = bag
     self.bag.player = self
-    
 
     # Player States
     self.defense = 0
@@ -33,14 +33,14 @@ class Player(LivingObject):
       self.glow.kill()
       self.kill()
   
-    if not self.attacking:
-      self.movement(controls)
-      self.idle(controls)
+    # if not self.attacking:
+    self.movement(controls)
+    self.idle(controls)
 
-      self.rect.left += self.xvel
-      self.collide(self.xvel, 0, objects)
-      self.rect.top += self.yvel
-      self.collide(0, self.yvel, objects)
+    self.rect.left += self.xvel
+    self.collide(self.xvel, 0, objects)
+    self.rect.top += self.yvel
+    self.collide(0, self.yvel, objects)
 
     if self.attacking:
       enemy = self.collide_with_enemy()
@@ -108,16 +108,23 @@ class Player(LivingObject):
 
   def idle(self, controls):
     if not (controls.LEFT or controls.RIGHT or controls.UP or controls.DOWN or controls.ACCELERATE):
-        self.xvel = 0
-        self.yvel = 0
-        self.moving = False
-        self.accelerating = False
+        if self.xvel > 0:
+          self.xvel -= 1
+        if self.xvel < 0:
+          self.xvel += 1
+        if self.yvel > 0:
+          self.yvel -= 1
+        if self.yvel < 0:
+          self.yvel += 1
+        if self.yvel == 0 and self.xvel == 0: 
+          self.moving = False
+          self.accelerating = False
     
-    if not controls.RIGHT and not controls.LEFT:
-      self.xvel = 0
+    # if not controls.RIGHT and not controls.LEFT:
+    #   self.xvel = 0
 
-    if not controls.UP and not controls.DOWN:
-      self.yvel = 0
+    # if not controls.UP and not controls.DOWN:
+    #   self.yvel = 0
 
   def pickup(self, item):
     if self.bag.assert_bag(item):

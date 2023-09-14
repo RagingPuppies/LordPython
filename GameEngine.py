@@ -58,14 +58,16 @@ class GameEngine:
 
   def render_all_objects(self):
     self.screen.blit(self.level.background, self.camera.apply(self.level))
-    
+
+    for object in static_objects:
+      self.screen.blit(object.image, self.camera.apply(object))
+      
     objects = location_based.sprites()
     objects.sort(key=lambda x: x.rect.y)
     for object in objects:
       self.screen.blit(object.image , self.center_pivot_sprite(object))
 
-    for object in static_objects:
-      self.screen.blit(object.image, self.camera.apply(object))
+
 
     for object in overlay_objects:
       self.screen.blit(object.image, object)

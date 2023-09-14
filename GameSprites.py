@@ -11,7 +11,7 @@ drgskl = pygame.image.load('Resources/Sprites/Misc/Dragon_Breath.png')
 guisheet = pygame.image.load('Resources/Sprites/Misc//gui.png')
 items = pygame.image.load('Resources/Sprites/Misc/items.jpg')
 
-def create_sequence(sprite, number_of_images ,start_x, start_y, size_x, size_y, jumper, scale = 1, go_down = None, go_down_step = 0):
+def create_sequence(sprite, number_of_images ,start_x, start_y, size_x, size_y, jumper, scale = 1, go_down = None, go_down_walk_speed = 0):
     sequence = []
     for n in range(number_of_images):
         frame = Surface((size_x,size_y),pygame.SRCALPHA)
@@ -19,7 +19,7 @@ def create_sequence(sprite, number_of_images ,start_x, start_y, size_x, size_y, 
         # Change image size and put in sequence array
         sequence.append(pygame.transform.scale(frame, ( int(size_x*scale), int(size_y*scale) )))
         start_x -= jumper  
-        if go_down and n == go_down_step:
+        if go_down and n == go_down_walk_speed:
             start_y -= size_y
             start_x = -1
     return sequence  

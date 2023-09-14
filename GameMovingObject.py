@@ -3,8 +3,8 @@ from pygame import Rect
 from GameObject import Damage, Slash
 from Animation import Animator
 
-class LivingObject(DirtySprite):
-  def __init__(self, location_x, location_y, animation, group, walk_speed = 3, level = 1):
+class MovingObject(DirtySprite):
+  def __init__(self, location_x, location_y, animation, group, level = 1):
     DirtySprite.__init__(self, group)
     # Visibility
     self.animator = Animator(self)
@@ -22,13 +22,13 @@ class LivingObject(DirtySprite):
     # Movement
     self.yvel = 0
     self.xvel = 0
-    self._step = walk_speed
+    self._walk_speed = 6
+    self._running_speed = 8
     self.moving = False
     self.attacking = False
     self.can_attack = True
     self.colliding = False
     self.accelerating = False
-    self._running_step = 4
     self.running_force = 0
 
     # Gameplay
@@ -63,18 +63,19 @@ class LivingObject(DirtySprite):
   def move(self, direction):
     self.moving = True
     if self.accelerating:
-      speed = self._running_step
+      speed = self._running_speed
     else:
-      speed = self._step
+      speed = self._walk_speed
     self.direction = direction
-    if direction == "down":
-      self.yvel = speed
-    if direction == "up":
-      self.yvel = -speed
-    if direction == "left":
-      self.xvel = -speed
-    if direction == "right":
-      self.xvel = speed
+    
+    if direction == "down" and self.yvel < speed:
+      self.yvel += 1
+    if direction == "up" and self.yvel > -speed:
+      self.yvel -= 1
+    if direction == "left" and self.xvel > -speed:
+      self.xvel -= 1
+    if direction == "right" and self.xvel < speed:
+      self.xvel += 1
 
 
   def attack(self, target):

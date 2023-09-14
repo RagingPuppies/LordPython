@@ -59,18 +59,6 @@ class Slash(ImageObject):
       self.animate()
       
 
-class Glow(StaticImageObject):
-    def __init__(self, objective):
-      StaticImageObject.__init__(self)
-      self.image = player_glow[0]
-      self.rect = self.image.get_rect()
-      self.objective = objective
-
-    def update(self):
-      self.rect.x = self.objective.rect.x - 40
-      self.rect.y = self.objective.rect.y - 15
-
-
 class StaticDrawObject(Sprite):
     def __init__(self, width, height):
       Sprite.__init__(self, static_objects)
@@ -82,6 +70,37 @@ class StaticDrawObject(Sprite):
     def update(self):
       ...
 
+class Ellipse(Sprite):
+    def __init__(self, hight = 100, width = 100, color = (255,255,0), thinkness = 0 ):
+      Sprite.__init__(self, static_objects)
+      import pygame.draw
+      self.image = Surface((hight, width), pygame.SRCALPHA)
+      self.image.fill((0,0,0,0))
+      self.rect = self.image.get_rect()     
+      pygame.draw.ellipse(self.image, color, self.rect, thinkness)
+
+    def update(self):
+      ...
+
+class Glow(Ellipse):
+    def __init__(self, objective):
+      tran_yellow = (255, 255, 120, 10)
+      Ellipse.__init__(self, 120, 30, tran_yellow)
+      self.objective = objective
+
+    def update(self):
+      self.rect.x = self.objective.rect.x - 31
+      self.rect.y = self.objective.rect.y + 55
+
+class GlowFade(Ellipse):
+    def __init__(self, objective):
+      tran_yellow = (255, 255, 120, 10)
+      Ellipse.__init__(self, 140, 50, tran_yellow)
+      self.objective = objective
+
+    def update(self):
+      self.rect.x = self.objective.rect.x - 40
+      self.rect.y = self.objective.rect.y + 45
 
 class PlayerPanel(StaticDrawObject):
     def __init__(self, objective):

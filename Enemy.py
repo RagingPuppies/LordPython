@@ -1,4 +1,4 @@
-from GameLivingObject import LivingObject
+from GameMovingObject import MovingObject
 from GameObject import HealthBar
 from pygame.sprite import  collide_rect
 from FightEngine import Attack
@@ -7,12 +7,12 @@ from GameItemFactory import random_item
 from random import randint
 
 
-class Enemy(LivingObject):
+class Enemy(MovingObject):
     def __init__(self, loc_x, loc_y, level, animation , group, speed, sight = 200):
-        LivingObject.__init__(self, loc_x, loc_y, animation, group)
+        MovingObject.__init__(self, loc_x, loc_y, animation, group)
         self.running_force = 900
         self.sight = sight
-        self._step = speed
+        self._walk_speed = speed
         self.level = level
         self.animation_multiplier = 4
         self.normal_attack = Attack(delay = 100)
@@ -43,7 +43,7 @@ class Enemy(LivingObject):
         self.normal_attack.hit_enemy(target, attack_dmg)
 
     def collide(self, xvel, yvel, objects, player):
-        LivingObject.collide(self, xvel, yvel, objects)
+        MovingObject.collide(self, xvel, yvel, objects)
         if collide_rect(self, player):
             rand = randint(0, 100)
             if rand == 3:
@@ -55,7 +55,7 @@ class Enemy(LivingObject):
         return math.hypot(self.rect.x - player.rect.x, self.rect.y - player.rect.y) < float(self.sight)
 
     def movement(self, player):
-        print(self.move_counter)
+
         if self.player_in_range(player) and not self.attacking:
             if not collide_rect(self, player):   
                 self.move_towards_player(player)
